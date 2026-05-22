@@ -1,0 +1,213 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { supabase } from "../../lib/supabase"
+
+export default function PremiumPlansPage() {
+
+  const [subscriptions, setSubscriptions] = useState<any[]>([])
+
+  const plans = [
+    {
+      name: "Starter Plan",
+      amount: "₹999",
+      features: [
+        "Basic Wellness Tracking",
+        "Diet Plans",
+        "Habit Tracker",
+      ],
+    },
+    {
+      name: "Pro Plan",
+      amount: "₹2999",
+      features: [
+        "1-on-1 Coaching",
+        "Advanced Analytics",
+        "Workout Planner",
+      ],
+    },
+    {
+      name: "Transformation Plan",
+      amount: "₹5999",
+      features: [
+        "Full Coaching Support",
+        "Meal Guidance",
+        "Daily Monitoring",
+      ],
+    },
+  ]
+
+  useEffect(() => {
+    fetchSubscriptions()
+  }, [])
+
+  async function fetchSubscriptions() {
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    if (!user) return
+
+    const { data } = await supabase
+      .from("subscriptions")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+
+    if (data) {
+      setSubscriptions(data)
+    }
+  }
+
+  async function subscribe(planName: string, amount: string) {
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    if (!user) return
+
+    await supabase.from("subscriptions").insert([
+      {
+        user_id: user.id,
+        plan_name: planName,
+        amount,
+      },
+    ])
+
+    alert("Subscription Activated ✅")
+
+    fetchSubscriptions()
+  }
+
+  return (
+    <main className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 p-8">
+
+      <div className="max-w-7xl mx-auto">
+
+        {/* Header */}
+
+        <div className="text-center mb-14">
+
+          <div className="text-8xl mb-5">
+            💳
+          </div>
+
+          <h1 className="text-5xl font-extrabold text-green-700">
+            Premium Wellness Plans
+          </h1>
+
+          <p className="text-gray-500 mt-3 text-xl">
+            Unlock premium coaching & wellness features
+          </p>
+
+        </div>
+
+        {/* Plans */}
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+          {plans.map((plan, index) => (
+
+            <div
+              key={index}
+              className="bg-white rounded-3xl shadow-2xl border border-green-100 p-8"
+            >
+
+              <h2 className="text-3xl font-extrabold text-green-700">
+                {plan.name}
+              </h2>
+
+              <p className="text-5xl font-extrabold text-green-700 mt-6">
+                {plan.amount}
+              </p>
+
+              <div className="space-y-4 mt-8">
+
+                {plan.features.map((feature, i) => (
+
+                  <div
+                    key={i}
+                    className="flex items-center gap-3"
+                  >
+
+                    <span className="text-green-600 text-2xl">
+                      ✅
+                    </span>
+
+                    <p className="text-gray-700 text-lg">
+                      {feature}
+                    </p>
+
+                  </div>
+
+                ))}
+
+              </div>
+
+              <button
+                onClick={() =>
+                  subscribe(plan.name, plan.amount)
+                }
+                className="w-full mt-10 bg-green-600 hover:bg-green-700 text-white py-5 rounded-2xl text-xl font-bold shadow-lg transition"
+              >
+                Subscribe Now
+              </button>
+
+            </div>
+
+          ))}
+
+        </div>
+
+        {/* Subscription History */}
+
+        <div className="bg-white rounded-3xl shadow-2xl border border-green-100 p-10 mt-14">
+
+          <h2 className="text-4xl font-extrabold text-green-700 mb-8">
+            Subscription History
+          </h2>
+
+          <div className="space-y-5">
+
+            {subscriptions.map((item) => (
+
+              <div
+                key={item.id}
+                className="bg-green-50 border border-green-100 rounded-2xl p-6"
+              >
+
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+
+                  <div>
+
+                    <h3 className="text-2xl font-bold text-green-700">
+                      {item.plan_name}
+                    </h3>
+
+                    <p className="text-gray-600 mt-2">
+                      💳 {item.amount}
+                    </p>
+
+                  </div>
+
+                  <div className="bg-green-600 text-white px-6 py-3 rounded-2xl font-bold">
+                    {item.status}
+                  </div>
+
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+  )
+}
