@@ -16,35 +16,39 @@ export default function RegisterPage() {
 
   async function handleRegister() {
 
-    if (!name || !email || !password) {
-      alert("Please fill all fields")
-      return
-    }
-
-    setLoading(true)
-
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: name,
-        },
-      },
-    })
-
-    setLoading(false)
-
-    if (error) {
-      alert(error.message)
-      return
-    }
-
-    alert("Registration Successful ✅")
-
-    router.push("/login")
+  if (!name || !email || !password) {
+    alert("Please fill all fields")
+    return
   }
 
+  if (password.length < 6) {
+    alert("Password must be at least 6 characters")
+    return
+  }
+
+  setLoading(true)
+
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        full_name: name,
+      },
+    },
+  })
+
+  setLoading(false)
+
+  if (error) {
+    alert(error.message)
+    return
+  }
+
+  alert("Registration Successful ✅")
+
+  router.push("/login")
+}
   return (
     <main className="min-h-screen bg-green-50 flex items-center justify-center p-6">
 
@@ -83,7 +87,7 @@ export default function RegisterPage() {
           <button
             onClick={handleRegister}
             disabled={loading}
-            className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-4 rounded-xl transition"
+            className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-semibold py-4 rounded-xl transition"
           >
             {loading ? "Creating Account..." : "Create Account"}
           </button>
