@@ -1,5 +1,6 @@
 "use client"
 
+import TopBar from "@/app/components/TopBar"
 import toast from "react-hot-toast"
 
 export default function PushNotificationsPage() {

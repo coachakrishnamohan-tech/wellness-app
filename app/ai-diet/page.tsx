@@ -1,5 +1,6 @@
 "use client"
 
+import TopBar from "@/app/components/TopBar"
 import { useState } from "react"
 
 export default function AIDietPage() {

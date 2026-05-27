@@ -1,5 +1,6 @@
 "use client"
 
+import TopBar from "@/app/components/TopBar"
 import { useEffect, useState } from "react"
 import { supabase } from "@/lib/supabase"
 
