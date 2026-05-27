@@ -1,5 +1,6 @@
 "use client"
 
+import TopBar from "@/app/components/TopBar"
 import { useState } from "react"
 
 export default function AICoachPage() {
@@ -14,8 +15,8 @@ export default function AICoachPage() {
 
   function sendMessage() {
 
-    if (!message) return
-
+    if (!message.trim()) return
+    
     const userMessage = {
       role: "user",
       text: message
@@ -60,9 +61,14 @@ export default function AICoachPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 p-8 flex items-center justify-center">
+    <>
 
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-5xl p-8">
+      <TopBar />
+
+    
+      <main className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 pt-24 p-8 flex items-center justify-center">
+
+       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-5xl p-8">
 
         {/* Header */}
 
@@ -84,7 +90,7 @@ export default function AICoachPage() {
 
         {/* Chat Area */}
 
-        <div className="bg-green-50 border border-green-100 rounded-3xl p-6 h-[500px] overflow-y-auto space-y-5">
+        <div className="bg-green-50 border border-green-100 rounded-3xl p-6 h-[500px] overflow-y-auto space-y-5 scrollbar-thin scrollbar-thumb-green-400">
 
           {chat.map((msg, index) => (
 
@@ -114,6 +120,11 @@ export default function AICoachPage() {
             placeholder="Ask wellness questions..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                sendMessage()
+              }
+            }}
             className="flex-1 border border-gray-300 p-5 rounded-2xl"
           />
 
