@@ -1,6 +1,5 @@
 "use client"
 
-import TopBar from "@/app/components/TopBar"
 import { useRouter } from "next/navigation"
 
 export default function TopBar() {
