@@ -84,12 +84,6 @@ export const dashboardCards = [
       emoji: "⚙️"
     },
     {
-      title: "Admin Panel",
-      description: "Manage customers & wellness analytics.",
-      link: "/admin",
-      emoji: "🛠️"
-    },
-    {
       title: "Appointments",
       description: "Book wellness consultations & coaching sessions.",
       link: "/appointments",
