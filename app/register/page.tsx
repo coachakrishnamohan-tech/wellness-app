@@ -46,6 +46,8 @@ export default function RegisterPage() {
   }
 
   alert("Registration Successful ✅")
+    
+  setLoading(false)
 
   router.push("/login")
 }
